@@ -16,8 +16,8 @@ def start_sync(sync_path, is_download):
     is_windows = os.name == 'nt'
 
     # Put your API & SECRET keys here
-    KEY = 'f7da21662566bc773c7c750ddf7030f7'
-    SECRET = 'c329cdaf44c6d3f3'
+    KEY = ''
+    SECRET = ''
 
     # Common arguments
     args = {'format': 'json', 'nojsoncallback': 1}
@@ -41,14 +41,15 @@ def start_sync(sync_path, is_download):
     # Build your local photo sets
     photo_sets = {}
     skips_root = []
-    for r, d, f in os.walk(sync_path):
+    for r, d, f in os.walk(unicode(sync_path)):
         for file in f:
-            if file.lower().split('.').pop() in ('jpg', 'png', 'jpeg', 'gif', 'bmp'):
-                if r == sync_path:
-                    skips_root.append(file)
-                else:
-                    photo_sets.setdefault(r, [])
-                    photo_sets[r].append(file)
+            if not r.endswith('.picasaoriginals'):
+                if file.lower().split('.').pop() in ('jpg', 'png', 'jpeg', 'gif', 'bmp', 'avi', 'mov'):
+                    if r == sync_path:
+                        skips_root.append(file)
+                    else:
+                        photo_sets.setdefault(r, [])
+                        photo_sets[r].append(file)
 
     if skips_root:
         print 'To avoid disorganization on flickr sets root photos are not synced, skipped these photos:', skips_root
@@ -174,6 +175,7 @@ def start_sync(sync_path, is_download):
 
 
 def main():
+    print 'Minha versão 1.0'
     parser = argparse.ArgumentParser(description='Sync current folder to your flickr account.')
     parser.add_argument('--download', type=str, help='download the photos from flickr specify a path or . for all')
 
